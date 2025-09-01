@@ -5,10 +5,6 @@ import org.junit.jupiter.api.*;
 
 public class InvoiceGeneratorTest {
 
-    @BeforeEach
-    public void inIt() {
-        System.out.println("Before test case run ");
-    }
     // Negative Test 1: Zero distance
     @Test
     public void givenZeroDistance_ShouldThrowException() {
@@ -17,7 +13,26 @@ public class InvoiceGeneratorTest {
             generator.calculateFare(0.0, 5, Ride.RideType.NORMAL);
         });
         Assertions.assertEquals("Distance must be greater than 0", ex.getMessage());
-        System.out.println("Negative Test case ");
+    }
+
+    // Negative Test 2: Negative time
+    @Test
+    public void givenNegativeTime_ShouldThrowException() {
+        InvoiceGenerator generator = new InvoiceGenerator();
+        Exception ex = Assertions.assertThrows(InvalidRideException.class, () -> {
+            generator.calculateFare(2.0, -3, Ride.RideType.NORMAL);
+        });
+        Assertions.assertEquals("Time cannot be negative", ex.getMessage());
+    }
+
+    // Negative Test 3: Null Ride Type
+    @Test
+    public void givenNullRideType_ShouldThrowException() {
+        InvoiceGenerator generator = new InvoiceGenerator();
+        Exception ex = Assertions.assertThrows(InvalidRideException.class, () -> {
+            generator.calculateFare(2.0, 5, null);
+        });
+        Assertions.assertEquals("Ride type cannot be null", ex.getMessage());
     }
 
     // Step 1: Calculate fare for a single normal ride
@@ -26,7 +41,6 @@ public class InvoiceGeneratorTest {
         InvoiceGenerator generator = new InvoiceGenerator();
         double fare = generator.calculateFare(2.0, 5, Ride.RideType.NORMAL);
         Assertions.assertEquals(25.0, fare);
-        System.out.println("Test 1");
     }
 
     // Step 2: Ensure minimum fare condition is applied
@@ -35,7 +49,6 @@ public class InvoiceGeneratorTest {
         InvoiceGenerator generator = new InvoiceGenerator();
         double fare = generator.calculateFare(2.0, 5, Ride.RideType.PREMIUM);
         Assertions.assertEquals(40.0, fare);
-        System.out.println("Test 2");
     }
 
     // Step 3: Calculate fare for multiple rides
@@ -48,7 +61,6 @@ public class InvoiceGeneratorTest {
         };
         double fare = generator.calculateFare(rides);
         Assertions.assertEquals(30.0, fare);
-        System.out.println("Test 3");
     }
 
     // Step 4: Generate invoice summary with average fare
@@ -62,11 +74,5 @@ public class InvoiceGeneratorTest {
         InvoiceSummary summary = generator.calculateSummary(rides);
         InvoiceSummary expected = new InvoiceSummary(2, 30.0);
         Assertions.assertEquals(expected, summary);
-        System.out.println("Test 4");
     }
-    @AfterEach
-    public void cleanUp(){
-        System.out.println("After test case run ");
-    }
-
 }
