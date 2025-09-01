@@ -9,6 +9,9 @@ public class InvoiceGenerator {
     private static final double PREMIUM_MIN_FARE = 20.0;
 
     public double calculateFare(double distance, int time, Ride.RideType type) {
+        if (distance <= 0) {
+            throw new InvalidRideException("Distance must be greater than 0");
+        }
         double totalFare = 0;
         if (type == Ride.RideType.NORMAL) {
             totalFare = distance * NORMAL_COST_PER_KM + time * NORMAL_COST_PER_MIN;

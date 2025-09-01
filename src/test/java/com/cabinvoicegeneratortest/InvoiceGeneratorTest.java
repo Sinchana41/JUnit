@@ -6,8 +6,18 @@ import org.junit.jupiter.api.*;
 public class InvoiceGeneratorTest {
 
     @BeforeEach
-    public void inIt(){
+    public void inIt() {
         System.out.println("Before test case run ");
+    }
+    // Negative Test 1: Zero distance
+    @Test
+    public void givenZeroDistance_ShouldThrowException() {
+        InvoiceGenerator generator = new InvoiceGenerator();
+        Exception ex = Assertions.assertThrows(InvalidRideException.class, () -> {
+            generator.calculateFare(0.0, 5, Ride.RideType.NORMAL);
+        });
+        Assertions.assertEquals("Distance must be greater than 0", ex.getMessage());
+        System.out.println("Negative Test case ");
     }
 
     // Step 1: Calculate fare for a single normal ride
@@ -16,7 +26,7 @@ public class InvoiceGeneratorTest {
         InvoiceGenerator generator = new InvoiceGenerator();
         double fare = generator.calculateFare(2.0, 5, Ride.RideType.NORMAL);
         Assertions.assertEquals(25.0, fare);
-
+        System.out.println("Test 1");
     }
 
     // Step 2: Ensure minimum fare condition is applied
